@@ -12,6 +12,11 @@ Build:
 Run (mapping port 3000):
   docker run --rm -it -p 3000:3000 --env-file .env --name kanban-task-manager-121675-286957 kanban-task-manager-frontend
 
+Notes on runtime:
+- Container WORKDIR is set to /app/kanban_board_frontend and npm start runs from there.
+- No host-absolute paths (e.g., /home/kavia/...) are used in the Dockerfile or scripts.
+- CRA respects PORT and HOST environment variables; pass REACT_APP_PORT or PORT via .env to change the exposed port.
+
 Environment variables (can be set via .env or -e):
 - REACT_APP_API_BASE
 - REACT_APP_BACKEND_URL
