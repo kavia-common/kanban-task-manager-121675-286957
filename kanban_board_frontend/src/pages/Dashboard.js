@@ -9,11 +9,12 @@ import { useKanban } from '../KanbanContext';
  * - Column summary (column -> number of cards)
  * All powered by live data from KanbanContext (Supabase).
  */
+
+// Canonical, user-facing status labels (ensure exact casing for "To do").
+const statusOrder = ['To do', 'In Progress', 'Review', 'Done', 'On Hold'];
+
 export default function Dashboard() {
   const { cards, columns, isLoading, error } = useKanban();
-
-  // Canonical, user-facing status labels (ensure exact casing for "To do").
-  const statusOrder = ['To do', 'In Progress', 'Review', 'Done', 'On Hold'];
 
   // Normalize any input status value to one of the canonical labels above.
   const normalizeStatus = React.useCallback((value) => {

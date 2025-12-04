@@ -151,7 +151,7 @@ function KanbanBoardInner() {
   // Only define DraggableKanbanColumn once!
   function DraggableKanbanColumn({ column, index, moveColumn, draggedCol, setDraggedCol, totalColumns, filteredCards, isCompact }) {
     // Drag source
-    const [{ isDragging }, drag, preview] = useDrag({
+    const [{ isDragging }, drag] = useDrag({
       type: COLUMN_TYPE,
       item: () => {
         setDraggedCol(index);
@@ -200,7 +200,7 @@ function KanbanBoardInner() {
     };
 
     // Keyboard reordering removed per requirement: Arrow keys disabled
-    const handleKeyDown = () => {};
+    // const handleKeyDown = () => {};
 
     // Pass filteredCards to Column if present
     return (

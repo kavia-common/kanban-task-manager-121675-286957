@@ -2,16 +2,9 @@ import React, { useMemo, useState } from "react";
 import { useKanban } from "../KanbanContext";
 import "./FilterPanel.css";
 import {
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
   Checkbox,
-  ListItemText,
-  OutlinedInput,
   Chip,
   Box,
-  useTheme,
   Autocomplete,
   TextField,
 } from "@mui/material";
@@ -28,29 +21,6 @@ function getUniqueFieldValues(cards, field) {
   ).sort((a, b) => a.localeCompare(b));
 }
 
-// Render MUI chips with minimal style
-function renderChips(values, getLabel, onDelete) {
-  return (
-    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.7 }}>
-      {values.map((val) => (
-        <Chip
-          key={val}
-          label={getLabel(val)}
-          size="small"
-          sx={{
-            bgcolor: "var(--color-bg-chip, #263949)",
-            color: "var(--color-chip-text, #ebfdff)",
-            fontWeight: 600,
-            m: "1px",
-            ".MuiChip-deleteIcon": { color: "#ef8585" },
-          }}
-          onDelete={onDelete ? () => onDelete(val) : undefined}
-        />
-      ))}
-    </Box>
-  );
-}
-
 // PUBLIC_INTERFACE
 /**
  * Minimal, modern, MUI-powered filter panel for Kanban board.
@@ -59,7 +29,6 @@ function renderChips(values, getLabel, onDelete) {
  */
 export default function FilterPanel({ onFiltersChange }) {
   const { cards, columns } = useKanban();
-  const theme = useTheme();
 
   // Filter state
   const [filters, setFilters] = useState({
@@ -95,15 +64,6 @@ export default function FilterPanel({ onFiltersChange }) {
   );
 
   // Change handlers for filters
-  function handleSelectChange(field) {
-    return (event) => {
-      setFilters((prev) => ({
-        ...prev,
-        [field]: event.target.value,
-      }));
-    };
-  }
-
   function handleChipDelete(field, value) {
     setFilters((prev) => ({
       ...prev,
@@ -158,24 +118,11 @@ export default function FilterPanel({ onFiltersChange }) {
       chips.push({ label: col ? col.title : colId, field: "columns", value: colId });
     });
     if (filters.dueFrom)
-      chips.push({ label: `Due ≥ ${filters.dueFrom}`, field: "dueFrom" });
+      chips.push({ label: `Due \u2265 ${filters.dueFrom}`, field: "dueFrom" });
     if (filters.dueTo)
-      chips.push({ label: `Due ≤ ${filters.dueTo}`, field: "dueTo" });
+      chips.push({ label: `Due \u2264 ${filters.dueTo}`, field: "dueTo" });
     return chips;
   }
-
-  // Helpers for getting option label for columns
-  const getColumnLabel = (id) =>
-    (columnOptions.find((col) => col.id === id) || {}).title || id;
-
-  // Min width + font for minimal, modern look
-  const selectSx = {
-    minWidth: 86,
-    maxWidth: { xs: 150, sm: 200 },
-    fontSize: ".98em",
-    bgcolor: "var(--input-bg, #222a3b)",
-    borderRadius: 1.1,
-  };
 
   // MUI Autocomplete for searchable, taggable drop-downs (assignee, etc)
   // We'll use freeSolo=false for enforced options, and checkboxes for accessibility.
@@ -349,7 +296,6 @@ export default function FilterPanel({ onFiltersChange }) {
     <section
       className="kanban-filter-panel"
       aria-label="Kanban Filter Panel"
-      role="region"
       style={{ padding: "7px 0 3px 0", background: "var(--color-bg-surface,#222937)" }}
     >
       <form
