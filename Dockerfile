@@ -5,9 +5,9 @@ FROM node:18-alpine AS base
 
 # Create and set working directory explicitly to the requested path
 # Ensures the directory exists inside the container
-RUN mkdir -p /home/kavia/workspace/code-generation/kanban-task-manager-121675/kanban_board_frontend
+RUN mkdir -p /home/kavia/workspace/code-generation/kanban-task-manager-121675-286957/kanban_board_frontend
 
-WORKDIR /home/kavia/workspace/code-generation/kanban-task-manager-121675/kanban_board_frontend
+WORKDIR /home/kavia/workspace/code-generation/kanban-task-manager-121675-286957/kanban_board_frontend
 
 # Install OS updates and utilities (optional but useful)
 RUN apk add --no-cache tini
@@ -32,6 +32,7 @@ EXPOSE 3000
 # Environment variables (read at runtime; default fallbacks)
 # These can be overridden via docker run -e or docker-compose env
 ENV PORT=3000
+ENV HOST=0.0.0.0
 ENV REACT_APP_API_BASE=""
 ENV REACT_APP_BACKEND_URL=""
 ENV REACT_APP_FRONTEND_URL=""
@@ -45,5 +46,5 @@ ENV REACT_APP_PORT="3000"
 ENTRYPOINT ["/sbin/tini", "--"]
 
 # Start the React dev server (or serve build if you adjust to a multi-stage prod image)
-# Create React App reads PORT and REACT_APP_* env at runtime for dev server
-CMD [ "sh", "-c", "echo Using WORKDIR: $(pwd) && ls -la && PORT=${REACT_APP_PORT:-$PORT} npm start" ]
+# Ensure the dev server binds to 0.0.0.0 and respects PORT
+CMD [ "sh", "-lc", "echo Using WORKDIR: $(pwd) && PORT=${REACT_APP_PORT:-$PORT} HOST=${HOST:-0.0.0.0} npm start" ]
