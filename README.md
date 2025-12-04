@@ -2,9 +2,9 @@
 
 This container packages a Create React App (CRA) frontend for the Kanban board.
 
-Dockerfile ensures the directory exists during container startup:
-- Ensured path: /home/kavia/workspace/code-generation/kanban-task-manager-121675/kanban_board_frontend
-- WORKDIR is set to that exact directory so builds and startup run from there.
+Dockerfile uses image-internal paths (no host-specific absolute paths):
+- App root inside image: `/app`
+- Frontend WORKDIR: `/app/kanban_board_frontend`
 
 Build:
   docker build -t kanban-task-manager-frontend .
@@ -25,3 +25,4 @@ Environment variables (can be set via .env or -e):
 Notes:
 - The Dockerfile uses Tini as PID 1 to properly handle signals.
 - By default, it runs the CRA dev server. For production, you can extend the Dockerfile to build the app and serve static files via Nginx or Node.
+- The .init/.linter.sh script is resilient and will use the repo-relative `./kanban_board_frontend` on host or `/app/kanban_board_frontend` inside the container.
